@@ -33,7 +33,7 @@ The integration setup will next give you instructions to enter the [Application 
 2. You will be asked to grant access to specific data in your Google Health account. The integration will dynamically adjust based on the permissions you grant:
     - **Profile** (required): Allows Home Assistant to verify your account identity.
     - **Activity and fitness** (optional): Granting this scope creates sensors for steps, distance, elevation, active calories, total calories, floors, active minutes by intensity, active zone minutes, and sedentary time.
-    - **Health metrics and measurements** (optional): Granting this scope creates sensors for weight, height, body mass index, body fat, resting heart rate, heart rate variability, oxygen saturation, respiratory rate, and <abbr title="maximal oxygen consumption">VO2 max</abbr>.
+    - **Health metrics and measurements** (optional): Granting this scope creates sensors for weight, height, body mass index, body fat, heart rate (latest, daily average, minimum, and maximum), resting heart rate, heart rate variability, oxygen saturation, respiratory rate, and <abbr title="maximal oxygen consumption">VO2 max</abbr>.
     - **Sleep data** (optional): Granting this scope creates sensors for sleep start and end times, sleep stage durations (<abbr title="rapid eye movement">REM</abbr>, deep, and light sleep), time asleep, time awake, time in bed, time to fall asleep, and time after wake-up.
     - **Nutrition and hydration** (optional): Granting this scope creates sensors for hydration, calories consumed, macronutrients (total fat, total carbohydrates, and protein), dietary fiber, sugar, sodium, and calories from fat.
     - **Paired devices** (optional): Granting this scope creates diagnostic sensors for battery level and last sync time for your paired wearables or devices.
@@ -82,6 +82,15 @@ The **Google Health** integration provides the following entities:
 - **Resting heart rate**: Daily resting heart rate.
 - **VO2 max** (disabled by default): Daily <abbr title="maximal oxygen consumption">VO2 max</abbr>.
 - **Weight**: Body weight.
+
+**Heart rate sensors**
+
+*Available for accounts that grant the Health metrics and measurements scope.*
+
+- **Average heart rate**: Daily average heart rate.
+- **Heart rate**: Most recent heart rate reading.
+- **Maximum heart rate** (disabled by default): Daily maximum heart rate.
+- **Minimum heart rate** (disabled by default): Daily minimum heart rate.
 
 **Sleep sensors**
 
@@ -192,6 +201,7 @@ automation: |
 The integration updates sensors on different intervals based on the data type:
 
 - Activity sensors (Active calories, Active zone minutes, Cardio active zone minutes, Distance, Elevation, Fat burn active zone minutes, Floors, Light activity, Moderate activity, Peak active zone minutes, Sedentary time, Steps, Total calories, Vigorous activity) are updated every 15 minutes.
+- Heart rate sensors (Average heart rate, Heart rate, Maximum heart rate, Minimum heart rate) are updated every 15 minutes.
 - Nutrition sensors (Calories consumed, Calories from fat, Dietary fiber, Hydration, Protein, Sodium, Sugar, Total carbohydrates, Total fat) are updated every 15 minutes.
 - Sleep sensors (Deep sleep, Light sleep, REM sleep, Sleep end time, Sleep start time, Time asleep, Time awake, Time in bed, Time to fall asleep, Time after wake-up) are updated every hour.
 - Body sensors (Body fat, Body mass index, Heart rate variability, Height, Oxygen saturation, Respiratory rate, Resting heart rate, VO2 max, Weight) are updated every hour.
@@ -199,7 +209,7 @@ The integration updates sensors on different intervals based on the data type:
 
 ## Known limitations
 
-- **Polling frequency**: Data is fetched from the Google Health API periodically (every 15 minutes for activity and nutrition data; every hour for sleep data, body measurements, and paired devices). Real-time event streaming is not supported.
+- **Polling frequency**: Data is fetched from the Google Health API periodically (every 15 minutes for activity, heart rate, and nutrition data; every hour for sleep data, body measurements, and paired devices). Real-time event streaming is not supported.
 - **Device sync latency**: Data displayed in Home Assistant depends on when your fitness tracker, smartwatch, or mobile app syncs its data to Google Health cloud servers.
 - **Scope-dependent entities**: Entities are created dynamically based on the permission scopes granted during the initial OAuth authorization. If a specific scope is unselected, entities for that category will not be created.
 - **Daily rollups**: Activity and sleep sensors reflect cumulative daily totals or aggregate summary metrics for the current calendar day.
